@@ -1,8 +1,9 @@
 package main
 
 import (
-	"encoding/json"
 	"log"
+	"mux-mongo-api/configs"
+	"mux-mongo-api/routes"
 	"net/http"
 
 	"github.com/gorilla/mux"
@@ -11,11 +12,11 @@ import (
 func main() {
 	router := mux.NewRouter()
 
-	router.HandleFunc("/", func(rw http.ResponseWriter, r *http.Request) {
-		rw.Header().Set("Content-Type", "application/json")
+	//run database
+	configs.ConnectDB()
 
-		json.NewEncoder(rw).Encode(map[string]string{"data": "Hello from Mux & mongoDB"})
-	}).Methods("GET")
+	//routes
+	routes.UserRoute(router) //add this
 
 	log.Fatal(http.ListenAndServe(":6000", router))
 }
